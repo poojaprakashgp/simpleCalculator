@@ -33,6 +33,7 @@ for(let i=0;i<opts.length;i++){
   buttons.className = "numbercss";
   docs.appendChild(buttons);
 }
+
 function evalute(exp){
  let tokens = exp.split('');
  let values =[], ops = [];
