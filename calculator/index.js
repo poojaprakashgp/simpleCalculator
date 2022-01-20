@@ -35,7 +35,7 @@ for (let i = 0; i < opts.length; i++) {
 function evalute(exp) {
   let tokens = exp.split('');
   let values = [], ops = [];
-  let firstNo = '';
+  let firstNo = '', second = '';
   for (let i = 0; i < tokens.length; i++) {
 
     if (tokens[i] === ' ') {
@@ -44,7 +44,7 @@ function evalute(exp) {
     if (tokens[i] >= '0' && tokens[i] <= '9') {
       let subs = '';
       while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9') {
-        subs = (i > 1 ? '' : firstNo) + subs + tokens[i++];
+        subs = (i > 1 ? '' : firstNo) + second + subs + tokens[i++];
       }
       console.log(subs, "subsss")
       values.push(parseInt(subs, 10));
@@ -54,25 +54,22 @@ function evalute(exp) {
       if (i === 0 && tokens[i] === '-') {
         firstNo = tokens[i];
       }
-      let op = '';
-      while (i < tokens.length && opts.includes(tokens[i + 1])) {
-        ++i;
-        op = tokens[i];
-
-      }
 
       if (ops.length > 0 && hasPrecedence(tokens[i], ops[ops.length - 1])) {
         values.push(applyop(ops.pop(), values.pop(), values.pop()))
       }
-      if (i !== 0 && op === '') {
+      if (i !== 0 && opts.includes(tokens[i + 1])) {
         ops.push(tokens[i]);
+      }
+      if (tokens[i + 1] === '-') {
+        second = tokens[i + 1];
+        i = i + 1;
       } else {
-        if (op !== '') {
-          ops.push(op);
+        if (i > 1) {
+          return "Expression error";
         }
 
       }
-
 
     }
   }
