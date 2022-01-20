@@ -1,28 +1,22 @@
 .continer{
-  display: flex;
-align-items: center;
-justify-content: center;
- height:100%;
- width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:100%;
+    width:100%;
 }
-.calculator{
-  height:40%;
-  width:40%;
-  border:1px solid black;
-}
-.child{
-  height:30px;
-  width:100%;
-  border:1px solid black;
-}
+  .calculator{
+    height:230px;
+    width:200px;
+    border:1px solid black;
+  }
+  .child{
+    height:30px;
+    width:200px;
+    border:1px solid black;
+  }
 
-.numbers{
-  display:flex;
-  flex-wrap: wrap;
-  height:300px;
-  width:300px;
- }
-.numbercss{
-  height:50px;
-  width:50px;
-}
+  .numbercss{
+    height:50px;
+    width:50px;
+  }
