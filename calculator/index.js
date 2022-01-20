@@ -35,7 +35,7 @@ for (let i = 0; i < opts.length; i++) {
 function evalute(exp) {
   let tokens = exp.split('');
   let values = [], ops = [];
-  let firstNo;
+  let firstNo = '';
   for (let i = 0; i < tokens.length; i++) {
 
     if (tokens[i] === ' ') {
