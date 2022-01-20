@@ -35,20 +35,25 @@ for (let i = 0; i < opts.length; i++) {
 function evalute(exp) {
   let tokens = exp.split('');
   let values = [], ops = [];
+  let firstNo;
   for (let i = 0; i < tokens.length; i++) {
+
     if (tokens[i] === ' ') {
       continue;
     }
-    if ((tokens[i] >= '0' && tokens[i] <= '9')) {
+    if (tokens[i] >= '0' && tokens[i] <= '9') {
       let subs = '';
       while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9') {
-        subs = subs + tokens[i++];
+        subs = (i > 1 ? '' : firstNo) + subs + tokens[i++];
       }
       console.log(subs, "subsss")
       values.push(parseInt(subs, 10));
       i--;
     }
     else if (tokens[i] === '+' || tokens[i] === '-' || tokens[i] === '/' || tokens[i] === '*') {
+      if (i === 0 && tokens[i] === '-') {
+        firstNo = tokens[i];
+      }
       let op = '';
       while (i < tokens.length && opts.includes(tokens[i + 1])) {
         ++i;
@@ -59,10 +64,13 @@ function evalute(exp) {
       if (ops.length > 0 && hasPrecedence(tokens[i], ops[ops.length - 1])) {
         values.push(applyop(ops.pop(), values.pop(), values.pop()))
       }
-      if (op === '') {
+      if (i !== 0 && op === '') {
         ops.push(tokens[i]);
       } else {
-        ops.push(op);
+        if (op !== '') {
+          ops.push(op);
+        }
+
       }
 
 
@@ -94,19 +102,20 @@ function applyop(op, a, b) {
     case '+':
       return a + b;
     case '-':
-      if (a < b) {
+      if (b < 0) {
+        return -(a - b);
+      } else if (a < b) {
         return b - a;
       } else {
         return -(a - b);
       }
-
     case '*':
       return a * b;
+
     case '/':
       if (a !== 0) {
         return b / a;
       } else {
-
         alert("Can not be divided by zero");
         return "Can not be divided by zero";
       }
