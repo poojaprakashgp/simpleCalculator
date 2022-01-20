@@ -1,117 +1,129 @@
-let docs=document.getElementById('numbers');
+let docs = document.querySelector('.numbersContiner');
 let expression = '';
-for(let i=9;i>=0;i--){
+for (let i = 9; i >= 0; i--) {
   let button = document.createElement('BUTTON');
   button.innerHTML = i;
   button.className = "numbercss";
-  button.setAttribute('id',`${i}`)
+  button.setAttribute('id', `${i}`)
   docs.appendChild(button);
 }
-let opts = ['+','*','/','-','=','C']
-document.getElementById('numbers').addEventListener('click',(event)=>{
-   console.log("event came", event.target.id);
-  
-  
-   if(event.target.id === '='){
-    document.querySelector('.child').innerHTML = evalute(expression); 
+let opts = ['+', '*', '/', '-', '=', 'C']
+document.querySelector('.numbersContiner').addEventListener('click', (event) => {
+  console.log("event came", event.target.id);
+
+
+  if (event.target.id === '=') {
+    document.querySelector('.child').innerHTML = evalute(expression);
     expression = document.querySelector('.child').innerHTML;
-   }else if(event.target.id === 'C'){
-   document.querySelector('.child').innerHTML = backspace(expression); 
+  } else if (event.target.id === 'C') {
+    document.querySelector('.child').innerHTML = backspace(expression);
     expression = document.querySelector('.child').innerHTML;
-   }
-   else{
+  }
+  else {
     expression = expression + event.target.id;
-   document.querySelector('.child').innerHTML = expression;
-   }
-   console.log(expression,"expression");
-   
+    document.querySelector('.child').innerHTML = expression;
+  }
+
 });
-for(let i=0;i<opts.length;i++){
+for (let i = 0; i < opts.length; i++) {
   let buttons = document.createElement("BUTTON");
-  buttons.setAttribute('id',`${opts[i]}`);
+  buttons.setAttribute('id', `${opts[i]}`);
   buttons.innerHTML = opts[i];
   buttons.className = "numbercss";
   docs.appendChild(buttons);
 }
-
-function evalute(exp){
- let tokens = exp.split('');
- let values =[], ops = [];
-  for(let i=0;i<tokens.length;i++){
-     if(tokens[i] === ' '){
+function evalute(exp) {
+  let tokens = exp.split('');
+  let values = [], ops = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] === ' ') {
       continue;
-     }
-     if(opts.includes(tokens[0]) || (opts.includes(tokens[i]) && opts.includes(tokens[i+1]))){
-      alert("Operator should not be the first in the calculator");
-      break;
-     }
-     if((tokens[i]>='0' && tokens[i]<='9')){
-     let subs='';
-       while(i<tokens.length && tokens[i]>='0' && tokens[i]<='9'){
-         
-         subs= subs + tokens[i++];
-         
-         
-         
-       }
-       console.log(subs,"subsss")
-       values.push(parseInt(subs,10));
-       i--;
-     }
-     else if(tokens[i]==='+'|| tokens[i] ==='-' || tokens[i]==='/' || tokens[i]==='*'){
-       if(ops.length>0 && hasPrecedence(tokens[i], ops[ops.length-1])){
-       values.push(applyop(ops.pop(),values.pop(),values.pop()))
-       }
-       
-       ops.push(tokens[i]);
-       console.log("tokenhhhhhh",tokens[i], ops.length)
-     }
+    }
+    if ((tokens[i] >= '0' && tokens[i] <= '9')) {
+      let subs = '';
+      while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9') {
+        subs = subs + tokens[i++];
+      }
+      console.log(subs, "subsss")
+      values.push(parseInt(subs, 10));
+      i--;
+    }
+    else if (tokens[i] === '+' || tokens[i] === '-' || tokens[i] === '/' || tokens[i] === '*') {
+      let op = '';
+      while (i < tokens.length && opts.includes(tokens[i + 1])) {
+        ++i;
+        op = tokens[i];
+
+      }
+
+      if (ops.length > 0 && hasPrecedence(tokens[i], ops[ops.length - 1])) {
+        values.push(applyop(ops.pop(), values.pop(), values.pop()))
+      }
+      if (op === '') {
+        ops.push(tokens[i]);
+      } else {
+        ops.push(op);
+      }
+
+
+    }
   }
-  console.log("token", ops.length,values)
-  while(ops.length>0){
-    values.push(applyop(ops.pop(),values.pop(),values.pop()));
-    
+
+  while (ops.length > 0 && isNumber(tokens[tokens.length - 1])) {
+    values.push(applyop(ops.pop(), values.pop(), values.pop()));
   }
-  return values.pop();
-  
+  if (isNumber(tokens[tokens.length - 1])) {
+    return values.pop();
+  } else {
+    return [...values, ...ops].join('');
+  }
+
+
 }
-function hasPrecedence(op1,op2){
-    if((op1 === '*' || op1=== '/')&& (op2==='+'||op2==='-')){
+
+function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
+
+function hasPrecedence(op1, op2) {
+  if ((op1 === '*' || op1 === '/') && (op2 === '+' || op2 === '-')) {
     return false;
-    }
-    return true;
   }
-  function applyop(op,a,b){
-    switch(op){
+  return true;
+}
+function applyop(op, a, b) {
+  switch (op) {
     case '+':
-      return a+b;
+      return a + b;
     case '-':
-    if(a<b){
-     return a-b;
-    }else{
-    return b-a;
-    }
-    console.log(newa, b,"values")
-    
-   
+      if (a < b) {
+        return b - a;
+      } else {
+        return -(a - b);
+      }
+
     case '*':
-    return a*b;
+      return a * b;
     case '/':
-     if(a!== 0){
-       return b/a;
-     }else{
-     console.log("invalid")
-     alert("invalid")
-     }
-    }
+      if (a !== 0) {
+        return b / a;
+      } else {
+
+        alert("Can not be divided by zero");
+        return "Can not be divided by zero";
+      }
   }
-  function backspace(expression){
+}
+function backspace(expression) {
+  if (/[a-zA-Z]/.test(expression)) {
+    return '';
+  } else {
     let exp = expression.split('');
     exp.pop();
     let res = '';
-    exp.forEach((elm)=>{
-      res = res+elm;
+    exp.forEach((elm) => {
+      res = res + elm;
     })
-    
+
     return res;
   }
+
+}
