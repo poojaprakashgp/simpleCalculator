@@ -58,17 +58,14 @@ function evalute(exp) {
       if (ops.length > 0 && hasPrecedence(tokens[i], ops[ops.length - 1])) {
         values.push(applyop(ops.pop(), values.pop(), values.pop()))
       }
-      if (i !== 0 && opts.includes(tokens[i + 1])) {
+      if (i !== 0 || opts.includes(tokens[i + 1])) {
         ops.push(tokens[i]);
       }
       if (tokens[i + 1] === '-') {
         second = tokens[i + 1];
         i = i + 1;
       } else {
-        if (i > 1) {
-          return "Expression error";
-        }
-
+        // 
       }
 
     }
