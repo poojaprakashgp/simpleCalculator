@@ -9,8 +9,6 @@ for (let i = 9; i >= 0; i--) {
 }
 let opts = ['+', '*', '/', '-', '=', 'C']
 document.querySelector('.numbersContiner').addEventListener('click', (event) => {
-  console.log("event came", event.target.id);
-
 
   if (event.target.id === '=') {
     document.querySelector('.child').innerHTML = evalute(expression);
@@ -46,7 +44,6 @@ function evalute(exp) {
       while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9') {
         subs = (i > 1 ? '' : firstNo) + (tokens[i - 1] === '-' ? second : '') + subs + tokens[i++];
       }
-      console.log(subs, "subsss")
       values.push(parseInt(subs, 10));
       i--;
     }
