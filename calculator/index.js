@@ -44,7 +44,7 @@ function evalute(exp) {
     if (tokens[i] >= '0' && tokens[i] <= '9') {
       let subs = '';
       while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9') {
-        subs = (i > 1 ? '' : firstNo) + second + subs + tokens[i++];
+        subs = (i > 1 ? '' : firstNo) + (tokens[i - 1] === '-' ? second : '') + subs + tokens[i++];
       }
       console.log(subs, "subsss")
       values.push(parseInt(subs, 10));
@@ -65,7 +65,9 @@ function evalute(exp) {
         second = tokens[i + 1];
         i = i + 1;
       } else {
-        // 
+        if (!isNumber(tokens[i + 1])) {
+          return "Expression Error";
+        }
       }
 
     }
